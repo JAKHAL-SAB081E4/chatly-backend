@@ -16,7 +16,7 @@ app.get("/api/chat", async (req, res) => {
     const {message} = req.query;   // 👈 GET uses query
 
     const response = await axios.get(
-      `https://text.pollination.ai/${encodeURIComponent(message)}`,{timeout:10000}
+      `https://text.pollinations.ai/${encodeURIComponent(message)}`,{timeout:10000}
     );
 
       res.status(200).json({
