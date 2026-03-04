@@ -1,38 +1,28 @@
 import express from "express";
-import mongoose from "mongoose";
-import OpenAI from "openai";
+import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 const app=express();
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err));
 
-app.post("/api/chat", async(req,res)=>{
-    try{
-        const {message}=req.body;
-        
-        const response = await openai.chat.completions.create({
-           model: "gpt-4o-mini", // affordable & fast
-        messages: [
-           { role: "system", content: "You are a helpful assistant." },
-           { role: "user", content: message }
-           ],
-        });
+app.get("/api/chat", async (req, res) => {
+  try {
+    const { query } = req.query;   // 👈 GET uses query
 
-    res.json({
-      reply: response.choices[0].message.content,
-    });
+    const response = await axios.get(
+      `https://text.pollination.ai/${encodeURIComponent(query)}`,{timeout:10000}
+    );
+
+      res.status(200).json({
+        message:response.data
+      });
+   
 
     }catch(error){
         console.log("REAL BACKEND ERROR:");
