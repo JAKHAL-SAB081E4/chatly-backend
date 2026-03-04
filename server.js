@@ -13,21 +13,21 @@ app.use(express.json());
 
 app.get("/api/chat", async (req, res) => {
   try {
-    const { query } = req.query;   // 👈 GET uses query
+    const {message} = req.query;   // 👈 GET uses query
 
     const response = await axios.get(
-      `https://text.pollination.ai/${encodeURIComponent(query)}`,{timeout:10000}
+      `https://text.pollination.ai/${encodeURIComponent(message)}`,{timeout:10000}
     );
 
       res.status(200).json({
-        message:response.data
+        reply:response.data
       });
    
 
     }catch(error){
         console.log("REAL BACKEND ERROR:");
         console.log(error.response?.data || error.message);
-        res.status(500).json({error:'API error'});
+        res.status(500).json({message:error.message});
     }
 })
     
